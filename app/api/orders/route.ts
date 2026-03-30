@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
       });
       await db
         .update(products)
-        .set({ stock: db.$count(products, eq(products.id, item.productId)) })
+        .set({ stock: products.stock - item.quantity })
         .where(eq(products.id, item.productId));
     }
 

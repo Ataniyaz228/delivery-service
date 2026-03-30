@@ -4,17 +4,17 @@ import Image from "next/image";
 import { Zap, ArrowRight, Clock, ShieldCheck, MapPin, Star, Package, Truck, CheckCircle, Utensils, Pizza, Cookie, Coffee, Apple, Milk, ShoppingCart, Plus } from "lucide-react";
 
 const FEATURES = [
-  { icon: <Clock size={20} />, title: "30 мин жеткізу", text: "Алматының кез-келген ауданына жарты сағаттан аз уақытта" },
+  { icon: <Clock size={20} />, title: "30 мин жеткізу", text: "Астананың кез-келген ауданына жарты сағаттан аз уақытта" },
   { icon: <ShieldCheck size={20} />, title: "Кепілдік", text: "Тапсырыс алмасаңыз — толық ақша қайтарамыз, ешбір сұрақсыз" },
   { icon: <MapPin size={20} />, title: "GPS қадағалау", text: "Тапсырысыңыздың қайда екенін нақты уақытта бақылаңыз" },
   { icon: <Star size={20} />, title: "Тек сапа", text: "Барлық серіктес мейрамхана мен дүкен сапа тексеруінен өтеді" },
 ];
 
 const SHOWCASE = [
-  { name: "Пепперони пицца", cat: "Пицца", price: "3 800", time: "25 мин", img: "https://images.unsplash.com/photo-1628840042765-356cda07504e?w=600&q=80&auto=format&fit=crop" },
-  { name: "Ет бургері де люкс", cat: "Бургер", price: "3 490", time: "20 мин", img: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?w=600&q=80&auto=format&fit=crop" },
-  { name: "Шоколадты торт", cat: "Десерт", price: "2 200", time: "35 мин", img: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&q=80&auto=format&fit=crop" },
-  { name: "Ягодалы смузи", cat: "Сусын", price: "1 100", time: "15 мин", img: "https://images.unsplash.com/photo-1505252585461-04db1eb84625?w=600&q=80&auto=format&fit=crop" },
+  { name: "Пепперони пицца", cat: "Dodo Pizza", price: "2 890", time: "25 мин", img: "https://images.dodopizza.ru/v2/288/pepperoni.jpg" },
+  { name: "Воппер", cat: "Burger King", price: "1 890", time: "15 мин", img: "https://bkastana.kz/images/whopper.jpg" },
+  { name: "Филадельфия", cat: "Sushi Master", price: "2 490", time: "20 мин", img: "https://sushimaster.kz/images/philadelphia.jpg" },
+  { name: "Баурсаки", cat: "Казахская кухня", price: "890", time: "15 мин", img: "https://astanatasty.kz/images/baursaki.jpg" },
 ];
 
 export default function HomePage() {
@@ -30,7 +30,7 @@ export default function HomePage() {
           <div className="hero__left">
             <div className="hero__eyebrow rise d1">
               <span className="hero__dot" />
-              <span className="hero__eyebrow-txt">Алматы #1 жеткізу сервисі</span>
+              <span className="hero__eyebrow-txt">Астана #1 жеткізу сервисі</span>
             </div>
 
             <h1 className="hero__h1 rise d2">
@@ -232,7 +232,7 @@ export default function HomePage() {
                 </div>
                 JetDelivery
               </div>
-              <div className="footer__copy">© 2024 · Алматы</div>
+              <div className="footer__copy">© 2024 · Астана</div>
             </div>
             <div className="footer__links">
               <Link href="/catalog" className="footer__link">Каталог</Link>

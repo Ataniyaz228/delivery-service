@@ -6,12 +6,14 @@ import Image from "next/image";
 import { Search, SlidersHorizontal, ChevronLeft, ChevronRight, Package, Utensils, Pizza, Cookie, Coffee, Apple, Milk, ShoppingCart, Clock, Plus, ChevronDown, X, SlidersVertical, ArrowDownUp } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import { useToast } from "@/lib/toast-context";
+import { getProductsByCategory, searchProducts, ASTANA_MENU_DATA } from "@/lib/real-data";
 
 const CAT_ICO: Record<string, any> = {
-  "Тамақ": <Utensils size={13} />, "Пицца": <Pizza size={13} />,
-  "Тұшпара": <Utensils size={13} />, "Тәттілер": <Cookie size={13} />,
-  "Сусындар": <Coffee size={13} />, "Бакалея": <ShoppingCart size={13} />,
-  "Жемістер": <Apple size={13} />, "Сүт өнімдері": <Milk size={13} />,
+  "pizza": <Pizza size={13} />,
+  "burgers": <Utensils size={13} />,
+  "sushi": <Utensils size={13} />,
+  "kazakh": <Cookie size={13} />,
+  "coffee": <Coffee size={13} />,
 };
 
 const SORT_OPTIONS = [
@@ -32,51 +34,49 @@ function CatalogContent() {
   const [products, setProducts] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [cats, setCats] = useState<any[]>([]);
+  const [cats, setCats] = useState<any[]>(ASTANA_MENU_DATA.categories);
   const [sort, setSort] = useState("default");
   const [priceMax, setPriceMax] = useState(10000);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const limit = 12;
 
+  // Load products from local real data
   useEffect(() => {
-    fetch("/api/categories")
-      .then(r => r.json())
-      .then(d => { if (Array.isArray(d)) setCats(d); })
-      .catch(() => {});
-  }, []);
-
-  const load = useCallback(() => {
     setLoading(true);
-    const p = new URLSearchParams();
-    if (q) p.set("q", q);
-    if (catId) p.set("category", catId);
-    p.set("page", String(page));
-    p.set("limit", String(limit));
-    fetch(`/api/products?${p}`)
-      .then(r => r.json())
-      .then(d => {
-        let prods = Array.isArray(d.products) ? d.products : [];
-        if (inStockOnly) prods = prods.filter((p: any) => p.stock > 0);
-        if (priceMax < 10000) prods = prods.filter((p: any) => Number(p.price) <= priceMax);
-        if (sort === "price_asc") prods.sort((a: any, b: any) => Number(a.price) - Number(b.price));
-        if (sort === "price_desc") prods.sort((a: any, b: any) => Number(b.price) - Number(a.price));
-        if (sort === "name_asc") prods.sort((a: any, b: any) => a.nameKz.localeCompare(b.nameKz));
-        setProducts(prods);
-        setTotal(d.total || 0);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+    let prods = getProductsByCategory(catId || undefined);
+    
+    // Search filter
+    if (q) {
+      prods = searchProducts(q);
+    }
+    
+    // Stock filter (simulate - all items in stock for demo)
+    if (inStockOnly) {
+      prods = prods.filter((p: any) => p.popular || true);
+    }
+    
+    // Price filter
+    if (priceMax < 10000) {
+      prods = prods.filter((p: any) => p.price <= priceMax);
+    }
+    
+    // Sort
+    if (sort === "price_asc") prods.sort((a: any, b: any) => a.price - b.price);
+    if (sort === "price_desc") prods.sort((a: any, b: any) => b.price - a.price);
+    if (sort === "name_asc") prods.sort((a: any, b: any) => a.name.localeCompare(b.name));
+    
+    setProducts(prods);
+    setTotal(prods.length);
+    setLoading(false);
   }, [q, catId, page, sort, priceMax, inStockOnly]);
-
-  useEffect(() => { load(); }, [load]);
 
   const pages = Math.ceil(total / limit);
 
   const handleAddToCart = (e: React.MouseEvent, prod: any) => {
     e.preventDefault();
-    add({ id: prod.id, nameKz: prod.nameKz, price: Number(prod.price), imageUrl: prod.imageUrl, categoryName: prod.categoryName });
-    toast(`"${prod.nameKz}" себетке қосылды`, "success");
+    add({ id: prod.id, nameKz: prod.name, price: prod.price, imageUrl: prod.image, categoryName: prod.category });
+    toast(`"${prod.name}" себетке қосылды`, "success");
   };
 
   const activeFilters = (catId ? 1 : 0) + (inStockOnly ? 1 : 0) + (priceMax < 10000 ? 1 : 0);
@@ -210,7 +210,7 @@ function CatalogContent() {
                       style={{ justifyContent: "flex-start", borderRadius: "var(--r-sm)", border: "none", background: catId === String(c.id) ? "var(--brand-dim)" : "none", width: "100%", textAlign: "left", color: catId === String(c.id) ? "var(--brand)" : "var(--txt-2)" }}
                       onClick={() => { setCatId(String(c.id)); setPage(1); }}
                     >
-                      {CAT_ICO[c.nameKz] || <Package size={13} />} {c.nameKz}
+                      {CAT_ICO[c.id] || <Package size={13} />} {c.name}
                     </button>
                   ))}
                 </div>
@@ -243,27 +243,23 @@ function CatalogContent() {
                   {products.map((prod: any) => (
                     <Link href={`/products/${prod.id}`} key={prod.id} className="food-card">
                       <div className="food-card__img-wrap">
-                        {prod.imageUrl
-                          ? <Image src={prod.imageUrl} alt={prod.nameKz} width={400} height={300} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                        {prod.image
+                          ? <Image src={prod.image} alt={prod.name} width={400} height={300} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                           : <div className="food-card__ph"><Package size={42} /></div>
                         }
-                        <div className="food-card__time"><Clock size={10} /> 25–40 мин</div>
+                        <div className="food-card__time"><Clock size={10} /> {prod.prepTime} мин</div>
                       </div>
                       <div className="food-card__body">
-                        <div className="food-card__cat">{CAT_ICO[prod.categoryName] || <Package size={10} />} {prod.categoryName || "Тауар"}</div>
-                        <div className="food-card__name">{prod.nameKz}</div>
-                        {prod.descriptionKz && (
-                          <div className="food-card__desc">{prod.descriptionKz.slice(0, 75)}{prod.descriptionKz.length > 75 ? "…" : ""}</div>
+                        <div className="food-card__cat">{CAT_ICO[prod.category] || <Package size={10} />} {ASTANA_MENU_DATA.categories.find(c => c.id === prod.category)?.name || "Тауар"}</div>
+                        <div className="food-card__name">{prod.name}</div>
+                        {prod.description && (
+                          <div className="food-card__desc">{prod.description.slice(0, 75)}{prod.description.length > 75 ? "…" : ""}</div>
                         )}
                         <div className="food-card__foot">
-                          <div className="food-card__price">{Number(prod.price).toLocaleString()} <sup>₸</sup></div>
-                          {prod.stock > 0 ? (
-                            <button className="food-card__add" onClick={e => handleAddToCart(e, prod)}>
-                              <Plus size={16} />
-                            </button>
-                          ) : (
-                            <span className="food-card__stock out">Жоқ</span>
-                          )}
+                          <div className="food-card__price">{prod.price.toLocaleString()} <sup>₸</sup></div>
+                          <button className="food-card__add" onClick={e => handleAddToCart(e, prod)}>
+                            <Plus size={16} />
+                          </button>
                         </div>
                       </div>
                     </Link>
