@@ -1,7 +1,7 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/zap.svg" width="60" alt="JetDelivery Logo"/>
   <h1>JetDelivery</h1>
-  <p>Modern, High-Performance Food Delivery Web Application</p>
+  <p>Заманауи, жылдам әрі ыңғайлы тамақ жеткізу веб-қосымшасы</p>
 
   <div>
     <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
@@ -13,91 +13,85 @@
 
 <br/>
 
-JetDelivery is a premium, full-stack food delivery service built specifically for fast performance, robust order tracking, and a seamless administrative experience.
+**JetDelivery** — Алматы қаласына арналған, жоғары өнімділікті қажет ететін, пайдаланушы мен әкімші (admin) үшін барынша ыңғайлы етіп жасалған тамақ жеткізу қызметінің толыққанды (full-stack) платформасы. Жоба 30 минут ішінде жеткізу логикасына негізделген.
 
-## System Architecture
+## Системалық Архитектура
 
-| Layer | Technology | Purpose |
+| Деңгей | Технология | Мақсаты / Қызметі |
 | :--- | :--- | :--- |
-| **Frontend** | Next.js 15 (App Router), React 19 | Server-side rendering, UI components, caching |
-| **Styling** | Vanilla CSS, Lucide Icons | Custom design system (`Amber & Charcoal`), zero-runtime CSS |
-| **Backend** | Next.js API Routes | RESTful API for auth, orders, and products |
-| **Database** | Neon (Serverless Postgres) | ACID-compliant persistent storage |
-| **ORM** | Drizzle ORM | Type-safe schema definition and querying |
-| **Auth** | NextAuth.js (Credentials Provider) | Secure user authentication and role management |
+| **Фронтенд** | Next.js 15 (App Router), React 19 | Серверлік рендер (SSR), UI компоненттер, дизайн |
+| **Стильдеу** | Vanilla CSS, Lucide Icons | Жеке дизайн-жүйе (`Amber & Charcoal`), премиум визуал |
+| **Бэкенд** | Next.js API Routes | Авторизация, тапсырыстар мен тауарларға арналған REST API |
+| **Дерекқор** | Neon (Serverless Postgres) | Мәліметтерді сенімді әрі қауіпсіз сақтау |
+| **ORM** | Drizzle | Дерекқор құрылымын қауіпсіз басқару және сұраныстар жасау |
+| **Қауіпсіздік** | NextAuth.js (Credentials) | Пайдаланушыларды құпия сөзбен тіркеу және ролдерді басқару |
 
-## Key Features
+## Негізгі Мүмкіндіктер
 
-### For Customers
-*   **Global Cart System:** LocalStorage-persisted cart accessible from a sliding drawer across all pages.
-*   **Live Order Tracking:** 4-step progressive tracker (`Pending` -> `Confirmed` -> `Delivering` -> `Delivered`).
-*   **Optimized Catalog:** Sticky sidebar with real-time filtering (categories, price sliders, stock availability) and sorting.
-*   **One-Click Checkout:** Streamlined 3-step checkout process with integrated order summary.
-*   **Toast Notifications:** Real-time feedback for all user actions without interrupting the flow.
+### Тұтынушылар үшін
+*   **Жаһандық себет (Global Cart):** `LocalStorage` арқылы сақталатын, кез-келген беттен ашылатын (Drawer) ыңғайлы смарт себет.
+*   **Тапсырысты қадағалау:** Тапсырыс күйін нақты уақытта көрсететін 4-қадамдық жүйе (`Күтілуде` -> `Расталды` -> `Жолда` -> `Жеткізілді`).
+*   **Оңтайландырылған каталог:** Тауарларды санаттар (Пицца, Сусындар, т.б.) бойынша сүзгілеуге арналған бекітілген (sticky) бүйірлік панель.
+*   **Жылдам төлем:** 3 қадамнан тұратын қарапайым тапсырыс рәсімдеу процесі.
 
-### For Administrators
-*   **Multi-Tab CRM Dashboard:** Dedicated admin panel with KPI metrics (Gross Revenue, Daily Orders).
-*   **Order Management:** Searchable table with detail modals and instant status updates.
-*   **Inventory Control:** Inline editing for product stock, pricing, and image URLs.
-*   **User Management:** Modify user roles directly from the interface.
+### Әкімшілер (Admin) үшін
+*   **CRM Басқару панелі:** Түскен табыс пен күнделікті тапсырыстарды көрсететін басты статистика экраны.
+*   **Тапсырыстарды қорыту:** Барлық тапсырыстарды көру, мәртебесін бір батырмамен өзгерту.
+*   **Инвентарь мен Каталог:** Тауарлардың бағасын, қоймадағы санын және суреттерін (URL) тікелей кестеден өңдеу, қажет болмаған тауарды жүйеден өшіру.
+*   **Пайдаланушылар базасы:** Клиенттер тізімін көру және олардың ролдерін басқару.
 
-## Database Schema
+## Дерекқор Құрылымы (Schema)
 
-| Table | Description | Relations |
+| Кесте атауы | Сипаттамасы | Тұрақты Байланыстар |
 | :--- | :--- | :--- |
-| `users` | Accounts, roles (`admin`, `customer`), and auth | 1:N with `orders` |
-| `categories`| Product categorizations and UI settings | 1:N with `products` |
-| `products` | Inventory details, pricing, and images | 1:N with `categories`, 1:N with `orderItems` |
-| `orders` | Order state, delivery address, and total amount | 1:N with `users`, 1:N with `orderItems` |
-| `orderItems`| Snapshot of product quantity and price at purchase | 1:1 with `products`, 1:1 with `orders` |
+| `users` | Пайдаланушы аккаунттары, рөлдері және құпия сөздері | `orders` кестесімен 1:N байланыс |
+| `categories`| Тауар санаттары мен дизайн элементтері (иконка, түс) | `products` кестесімен 1:N байланыс |
+| `products` | Тауарлар туралы толық мәлімет (бағасы, суреті, қоры) | `categories`, `orderItems` кестелерімен байланыс |
+| `orders` | Тапсырыстың жалпы сомасы, мекенжайы және статусы | `users`, `orderItems` кестелерімен байланыс |
+| `orderItems`| Сатып алынған тауарлардың тапсырыс сәтіндегі фиксациясы | `orders`, `products` кестелерімен 1:1 байланыс |
 
-## Getting Started
+## Жобаны Іске Қосу (Local Setup)
 
-Follow these steps to set up the project locally.
+Жобаны өз компьютеріңізде іске қосу үшін төмендегі қадамдарды орындаңыз.
 
-### 1. Requirements
+### 1. Қажетті құралдар
+*   [Node.js](https://nodejs.org/en/) (v18.17 немесе жаңалау)
+*   [pnpm](https://pnpm.io/) (v9 немесе жаңалау)
+*   PostgreSQL дерекқоры (немесе Neon DB сілтемесі)
 
-Ensure you have the following installed on your local machine:
-*   [Node.js](https://nodejs.org/en/) (v18.17 or newer)
-*   [pnpm](https://pnpm.io/) (v9 or newer)
-*   A running PostgreSQL database instance (or a Neon DB URL)
-
-### 2. Environment Variables
-
-Create a `.env.local` file in the root directory and configure the following variables:
+### 2. Қоршаған орта айнымалылары (ENV)
+Жобаның түбірінде `.env.local` файлын құрып, мына деректерді толтырыңыз:
 
 ```bash
-DATABASE_URL=postgresql://user:password@host/dbname?sslmode=require
+DATABASE_URL=postgresql://user:password@host/dbname?sslmode=verify-full
 NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your_secure_random_string_here
+NEXTAUTH_SECRET=кез_келген_күрделі_құпия_сөз
 ```
 
-### 3. Installation & Setup
+### 3. Орнату және Дерекқорды дайындау
 
 ```bash
-# Install dependencies
+# Тәуелділіктерді (dependencies) орнату
 pnpm install
 
-# Push database schema
+# Дерекқор схемасын синхрондау (push)
 pnpm db:push
 
-# Seed the database with initial categories and products (optional)
+# Дерекқорды бастапқы тауарлармен және санаттармен толтыру (міндетті емес)
 pnpm db:seed
 ```
 
-### 4. Running the Development Server
+### 4. Жобаны іске қосу
 
 ```bash
+# Даму (development) режимінде қосу
 pnpm dev
 ```
-Open [http://localhost:3000](http://localhost:3000) to view the application in your browser.
+Браузерден [http://localhost:3000](http://localhost:3000) сілтемесін ашып, қосымшаны қолдана аласыз.
 
-## Deployment
+## Vercel-ге Жүктеу (Deployment)
 
-This project is optimized for deployment on Vercel. Connect your repository to Vercel and ensure the following environment variables are mapped in your project settings:
-*   `DATABASE_URL`
-*   `NEXTAUTH_URL`
-*   `NEXTAUTH_SECRET`
+Жоба Vercel платформасына тікелей жүктеу үшін оңтайландырылған. GitHub репозиторийіңізді Vercel-ге жалғаңыз және *Project Settings -> Environment Variables* бөлімінде жоғарыда аталған құпия кілттерді орнатуды ұмытпаңыз.
 
 ---
-*Built with modern web standards for speed and reliability.*
+*Жоғары жылдамдық пен сенімділік үшін заманауи веб-стандарттар негізінде жасалған.*
