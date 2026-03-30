@@ -76,14 +76,14 @@ export const ASTANA_MENU_DATA = {
   ],
   
   products: [
-    // Pizza - based on Dodo Pizza Astana menu
+    // Pizza - based on Dodo Pizza Astana menu (using reliable images)
     {
       id: "p1",
       category: "pizza",
       name: "Пепперони",
       description: "Классическая пицца с пепперони и моцареллой",
       price: 2890,
-      image: "https://images.dodopizza.ru/v2/288/pepperoni.jpg",
+      image: "https://images.unsplash.com/photo-1628840042765-356cda07504e?w=800&auto=format&fit=crop&q=60",
       rating: 4.8,
       reviews: 1247,
       prepTime: 25,
@@ -96,7 +96,7 @@ export const ASTANA_MENU_DATA = {
       name: "Четыре сыра",
       description: "Моцарелла, чеддер, пармезан и горгонзола",
       price: 3190,
-      image: "https://images.dodopizza.ru/v2/288/four-cheese.jpg",
+      image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&auto=format&fit=crop&q=60",
       rating: 4.7,
       reviews: 892,
       prepTime: 25,
@@ -109,7 +109,7 @@ export const ASTANA_MENU_DATA = {
       name: "Мясная",
       description: "Ветчина, колбаски, бекон и курица",
       price: 3490,
-      image: "https://images.dodopizza.ru/v2/288/meat-lovers.jpg",
+      image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&auto=format&fit=crop&q=60",
       rating: 4.9,
       reviews: 1534,
       prepTime: 30,
@@ -117,14 +117,14 @@ export const ASTANA_MENU_DATA = {
       popular: true
     },
     
-    // Burgers - based on Burger King Astana
+    // Burgers - using reliable Unsplash images
     {
       id: "b1",
       category: "burgers",
       name: "Воппер",
       description: "Легендарный бургер с говядиной на гриле",
       price: 1890,
-      image: "https://bkastana.kz/images/whopper.jpg",
+      image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&auto=format&fit=crop&q=60",
       rating: 4.6,
       reviews: 2341,
       prepTime: 15,
@@ -137,7 +137,7 @@ export const ASTANA_MENU_DATA = {
       name: "Чизбургер Де Люкс",
       description: "Говядина, сыр чеддер, свежие овощи",
       price: 1590,
-      image: "https://bkastana.kz/images/cheeseburger.jpg",
+      image: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=800&auto=format&fit=crop&q=60",
       rating: 4.5,
       reviews: 1876,
       prepTime: 12,
@@ -150,7 +150,7 @@ export const ASTANA_MENU_DATA = {
       name: "Фиш Бургер",
       description: "Рыбное филе в хрустящей панировке",
       price: 1390,
-      image: "https://bkastana.kz/images/fish-burger.jpg",
+      image: "https://images.unsplash.com/photo-1619250907577-d35b9ed1bb22?w=800&auto=format&fit=crop&q=60",
       rating: 4.3,
       reviews: 987,
       prepTime: 10,
@@ -158,14 +158,14 @@ export const ASTANA_MENU_DATA = {
       popular: false
     },
     
-    // Sushi - based on local sushi bars
+    // Sushi - using reliable Unsplash images
     {
       id: "s1",
       category: "sushi",
       name: "Филадельфия",
       description: "Лосось, сливочный сыр, огурец, авокадо",
       price: 2490,
-      image: "https://sushimaster.kz/images/philadelphia.jpg",
+      image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=800&auto=format&fit=crop&q=60",
       rating: 4.8,
       reviews: 1654,
       prepTime: 20,
@@ -178,7 +178,7 @@ export const ASTANA_MENU_DATA = {
       name: "Калифорния",
       description: "Краб, икра масаго, огурец, авокадо",
       price: 2190,
-      image: "https://sushimaster.kz/images/california.jpg",
+      image: "https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?w=800&auto=format&fit=crop&q=60",
       rating: 4.7,
       reviews: 1432,
       prepTime: 18,
@@ -191,7 +191,7 @@ export const ASTANA_MENU_DATA = {
       name: "Дракон",
       description: "Угорь, сливочный сыр, огурец, кунжут",
       price: 2890,
-      image: "https://sushimaster.kz/images/dragon.jpg",
+      image: "https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=800&auto=format&fit=crop&q=60",
       rating: 4.9,
       reviews: 1876,
       prepTime: 22,
@@ -199,14 +199,14 @@ export const ASTANA_MENU_DATA = {
       popular: true
     },
     
-    // Kazakh cuisine - traditional dishes
+    // Kazakh cuisine - traditional dishes (using generic food images)
     {
       id: "k1",
       category: "kazakh",
       name: "Баурсаки",
       description: "Традиционные казахские пончики (10 шт)",
       price: 890,
-      image: "https://astanatasty.kz/images/baursaki.jpg",
+      image: "https://images.unsplash.com/photo-1626074353765-517a681e40be?w=800&auto=format&fit=crop&q=60",
       rating: 4.9,
       reviews: 2134,
       prepTime: 15,
@@ -219,7 +219,7 @@ export const ASTANA_MENU_DATA = {
       name: "Манты",
       description: "Паровые пельмени с мясом (4 шт)",
       price: 1890,
-      image: "https://astanatasty.kz/images/manty.jpg",
+      image: "https://images.unsplash.com/photo-1624300629298-e9de39c13be6?w=800&auto=format&fit=crop&q=60",
       rating: 4.8,
       reviews: 1765,
       prepTime: 25,
@@ -232,7 +232,7 @@ export const ASTANA_MENU_DATA = {
       name: "Плов по-казахски",
       description: "Рис с бараниной, морковью и сухофруктами",
       price: 2490,
-      image: "https://astanatasty.kz/images/plov.jpg",
+      image: "https://images.unsplash.com/photo-1604908176997-125f15f1024f?w=800&auto=format&fit=crop&q=60",
       rating: 4.7,
       reviews: 1234,
       prepTime: 30,
@@ -240,14 +240,14 @@ export const ASTANA_MENU_DATA = {
       popular: false
     },
     
-    // Coffee & Desserts
+    // Coffee & Desserts - using reliable Unsplash images
     {
       id: "c1",
       category: "coffee",
       name: "Капучино",
       description: "Классический капучино из зерен арабики",
       price: 890,
-      image: "https://starbucks.kz/images/cappuccino.jpg",
+      image: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=800&auto=format&fit=crop&q=60",
       rating: 4.6,
       reviews: 3421,
       prepTime: 5,
@@ -260,7 +260,7 @@ export const ASTANA_MENU_DATA = {
       name: "Латте",
       description: "Мягкий латте с молочной пенкой",
       price: 990,
-      image: "https://starbucks.kz/images/latte.jpg",
+      image: "https://images.unsplash.com/photo-1570968992193-6e5c922c4463?w=800&auto=format&fit=crop&q=60",
       rating: 4.7,
       reviews: 2987,
       prepTime: 5,
@@ -273,7 +273,7 @@ export const ASTANA_MENU_DATA = {
       name: "Чизкейк Нью-Йорк",
       description: "Классический американский чизкейк",
       price: 1290,
-      image: "https://starbucks.kz/images/cheesecake.jpg",
+      image: "https://images.unsplash.com/photo-1533134242116-79c5e60818a7?w=800&auto=format&fit=crop&q=60",
       rating: 4.8,
       reviews: 1876,
       prepTime: 3,
