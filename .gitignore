@@ -10,7 +10,7 @@ build/
 # Environment variables
 .env
 .env.local
-.env.*
+*.env.*
 
 # Python
 __pycache__/
@@ -43,13 +43,27 @@ coverage/
 htmlcov/
 .coverage
 
-# MyPy
+# Testing
 .mypy_cache/
-
-# Pytest
 .pytest_cache/
+.nyc_output/
+coverage/lcov-report/
 
-# Compressed files
+# Node.js
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Compiled
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+*.out
+
+# Compressed
 *.zip
 *.gz
 *.tar
@@ -68,8 +82,4 @@ htmlcov/
 *.Z
 *.lz
 *.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
 ```
