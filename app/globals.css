@@ -401,6 +401,7 @@ a { color: inherit; text-decoration: none; }
 
 /* ═══ CHECKOUT ═══ */
 .checkout-layout { display:grid; grid-template-columns:1fr 320px; gap:2rem; align-items:start; }
+.checkout-panel { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--r-xl); padding:clamp(1rem, 4vw, 2rem); }
 
 /* ═══ ADMIN ═══ */
 .adm-grid { display:grid; grid-template-columns:360px 1fr; gap:1.5rem; }
@@ -464,6 +465,11 @@ a { color: inherit; text-decoration: none; }
 .feat-title { font-family:var(--font-d); font-size:0.95rem; font-weight:700; color:var(--txt); margin-bottom:0.4rem; }
 .feat-text { font-size:0.82rem; color:var(--txt-2); line-height:1.65; }
 
+/* ═══ CART ITEM ═══ */
+.cart-item { display:flex; gap:1rem; align-items:center; padding:0.85rem; background:var(--bg-raised); border-radius:var(--r); border:1px solid var(--border); }
+.cart-item__info { flex:1; min-width:0; }
+.cart-item__actions { display:flex; align-items:center; gap:6px; flex-shrink:0; }
+
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:1100px){
   .hero { grid-template-columns: 1fr; padding-top: 58px; min-height: auto; }
@@ -483,9 +489,9 @@ a { color: inherit; text-decoration: none; }
   .feat-item:nth-child(4) { border-top: 1px solid var(--border); border-right: none; }
   
   .pd { grid-template-columns: 1fr; }
-  .pd-layout { grid-template-columns: 1fr; }
-  .checkout-layout { grid-template-columns: 1fr; }
-  .adm-grid { grid-template-columns: 1fr; }
+  .pd-layout { grid-template-columns: 1fr !important; }
+  .checkout-layout { grid-template-columns: 1fr !important; gap: 1rem !important; }
+  .adm-grid { grid-template-columns: 1fr !important; }
   .adm-kpi { grid-template-columns: 1fr 1fr; }
   .adm-cols { grid-template-columns: 1fr; }
   .auth-layout { grid-template-columns: 1fr; }
@@ -519,7 +525,10 @@ a { color: inherit; text-decoration: none; }
   .hero__btns .btn { width: 100%; }
   .hero__stats { gap: 1rem; flex-wrap: wrap; }
   
-  .food-grid { grid-template-columns: 1fr; }
+  .food-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  
+  .cart-item { gap:0.5rem; padding: 0.65rem; }
+  .cart-item__info .font-d { font-size: 0.8rem !important; }
   
   .feat-strip { grid-template-columns: 1fr; }
   .feat-item { border-right: none; border-bottom: 1px solid var(--border); }

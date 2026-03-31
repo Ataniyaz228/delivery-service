@@ -111,7 +111,7 @@ export default function CheckoutPage() {
 
         <div className="checkout-layout">
           {/* Main content */}
-          <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--r-xl)", padding: "2rem" }}>
+          <div className="checkout-panel">
             {/* Step 0: Cart review */}
             {step === 0 && (
               <div>
@@ -120,17 +120,17 @@ export default function CheckoutPage() {
                 </h2>
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
                   {items.map(item => (
-                    <div key={item.id} style={{ display: "flex", gap: "1rem", alignItems: "center", padding: "0.85rem", background: "var(--bg-raised)", borderRadius: "var(--r)", border: "1px solid var(--border)" }}>
+                    <div key={item.id} className="cart-item">
                       {item.imageUrl && (
                         <div style={{ width: 52, height: 52, borderRadius: "var(--r-sm)", overflow: "hidden", flexShrink: 0 }}>
                           <Image src={item.imageUrl} alt={item.nameKz} width={52} height={52} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                         </div>
                       )}
-                      <div style={{ flex: 1, minWidth: 0 }}>
+                      <div className="cart-item__info">
                         <div style={{ fontFamily: "var(--font-d)", fontWeight: 700, fontSize: "0.9rem", color: "var(--txt)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.nameKz}</div>
                         <div style={{ fontSize: "0.82rem", color: "var(--brand)", fontWeight: 800, fontFamily: "var(--font-d)" }}>{(item.price * item.quantity).toLocaleString()} ₸</div>
                       </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <div className="cart-item__actions">
                         <div className="qty" style={{ padding: 3 }}>
                           <button className="qty__btn" style={{ width: 28, height: 28 }} onClick={() => change(item.id, item.quantity - 1)}><Minus size={12} /></button>
                           <span className="qty__n" style={{ minWidth: 20 }}>{item.quantity}</span>
@@ -189,9 +189,9 @@ export default function CheckoutPage() {
                   ].map(r => (
                     <div key={r.label} style={{ display: "flex", gap: "0.85rem", padding: "1rem", background: "var(--bg-raised)", borderRadius: "var(--r)", border: "1px solid var(--border)", alignItems: "flex-start" }}>
                       <span style={{ color: "var(--brand)", flexShrink: 0, marginTop: 2 }}>{r.icon}</span>
-                      <div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontSize: "0.73rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--txt-3)", marginBottom: "3px" }}>{r.label}</div>
-                        <div style={{ fontSize: "0.88rem", color: "var(--txt)", fontWeight: 600 }}>{r.val}</div>
+                        <div style={{ fontSize: "0.88rem", color: "var(--txt)", fontWeight: 600, wordBreak: "break-word" }}>{r.val}</div>
                       </div>
                     </div>
                   ))}
@@ -207,7 +207,7 @@ export default function CheckoutPage() {
           </div>
 
           {/* Order summary sidebar */}
-          <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--r-xl)", padding: "1.5rem", position: "sticky", top: 80 }}>
+          <div className="checkout-panel" style={{ position: "sticky", top: 80 }}>
             <div style={{ fontFamily: "var(--font-d)", fontWeight: 800, fontSize: "0.95rem", color: "var(--txt)", marginBottom: "1.25rem" }}>Тапсырыс қорытындысы</div>
             {items.map(item => (
               <div key={item.id} style={{ display: "flex", justifyContent: "space-between", fontSize: "0.82rem", marginBottom: "0.6rem" }}>

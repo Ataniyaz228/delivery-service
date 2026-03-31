@@ -61,11 +61,7 @@ export default function CartDrawer({ open, onClose }: { open: boolean; onClose: 
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
               {items.map(item => (
-                <div key={item.id} style={{
-                  display: "flex", gap: "0.85rem", alignItems: "center",
-                  background: "var(--bg-raised)", borderRadius: "var(--r)", padding: "0.85rem",
-                  border: "1px solid var(--border)",
-                }}>
+                <div key={item.id} className="cart-item">
                   {item.imageUrl ? (
                     <div style={{ width: 56, height: 56, borderRadius: "var(--r-sm)", overflow: "hidden", flexShrink: 0 }}>
                       <Image src={item.imageUrl} alt={item.nameKz} width={56} height={56} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
@@ -73,11 +69,11 @@ export default function CartDrawer({ open, onClose }: { open: boolean; onClose: 
                   ) : (
                     <div style={{ width: 56, height: 56, borderRadius: "var(--r-sm)", background: "var(--bg-hover)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: "var(--txt-3)", fontSize: "1.4rem" }}>🍽</div>
                   )}
-                  <div style={{ flex: 1, minWidth: 0 }}>
+                  <div className="cart-item__info">
                     <div style={{ fontFamily: "var(--font-d)", fontWeight: 700, fontSize: "0.88rem", color: "var(--txt)", marginBottom: "2px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.nameKz}</div>
                     <div style={{ fontSize: "0.85rem", color: "var(--brand)", fontWeight: 800, fontFamily: "var(--font-d)" }}>{(item.price * item.quantity).toLocaleString()} ₸</div>
                   </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "6px", flexShrink: 0 }}>
+                  <div className="cart-item__actions">
                     <button onClick={() => change(item.id, item.quantity - 1)} style={{ width: 28, height: 28, border: "1px solid var(--border-hi)", borderRadius: "6px", background: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--txt-2)" }}>
                       <Minus size={12} />
                     </button>
