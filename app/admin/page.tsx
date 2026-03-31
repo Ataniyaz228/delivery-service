@@ -168,7 +168,7 @@ export default function AdminPage() {
           {/* ── Tab: Dashboard ── */}
           {tab === "dashboard" && (
             <div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1rem", marginBottom: "2rem" }}>
+              <div className="adm-kpi" style={{ marginBottom: "2rem" }}>
                 <KpiCard icon={<ShoppingBag size={18} />} label="Жалпы тапсырыс" value={String(orders.length)} sub="Барлық уақытта" color="var(--brand)" />
                 <KpiCard icon={<TrendingUp size={18} />} label="Жалпы кіріс" value={`${revenue.toLocaleString()} ₸`} sub="Жеткізілген тапсырыстардан" color="var(--green)" />
                 <KpiCard icon={<BarChart3 size={18} />} label="Бүгін тапсырыс" value={String(todayOrders)} sub="Бүгінгі тапсырыстар саны" color="var(--blue)" />
@@ -176,7 +176,7 @@ export default function AdminPage() {
               </div>
 
               {/* Status distribution */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+              <div className="adm-cols">
                 <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--r-lg)", padding: "1.5rem" }}>
                   <div className="adm-title" style={{ marginBottom: "1.25rem" }}><BarChart3 size={15} /> Статус бойынша</div>
                   {Object.entries(ST_OPT).map(([k, v]) => {
@@ -228,7 +228,7 @@ export default function AdminPage() {
                 <span style={{ fontSize: "0.79rem", color: "var(--txt-2)", marginLeft: "auto" }}>{filteredOrders.length} тапсырыс</span>
               </div>
 
-              <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--r-lg)", overflow: "hidden" }}>
+              <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--r-lg)", overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse" }}>
                   <thead>
                     <tr style={{ borderBottom: "1px solid var(--border)" }}>
@@ -303,7 +303,7 @@ export default function AdminPage() {
 
           {/* ── Tab: Products ── */}
           {tab === "products" && (
-            <div style={{ display: "grid", gridTemplateColumns: "340px 1fr", gap: "1.5rem", alignItems: "start" }}>
+            <div className="adm-grid">
               {/* Add form */}
               <div className="adm-panel" style={{ position: "sticky", top: 80 }}>
                 <div className="adm-title"><Plus size={15} /> Тауар қосу</div>
@@ -434,7 +434,7 @@ export default function AdminPage() {
 
           {/* ── Tab: Users ── */}
           {tab === "users" && (
-            <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--r-lg)", overflow: "hidden" }}>
+            <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--r-lg)", overflowX: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "collapse" }}>
                 <thead>
                   <tr style={{ borderBottom: "1px solid var(--border)" }}>

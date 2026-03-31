@@ -134,7 +134,7 @@ export default function HomePage() {
       {/* ═══ SHOWCASE ═══ */}
       <section className="sec">
         <div className="container">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "2rem", flexWrap: "wrap", gap: "1rem" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", flexWrap: "wrap", gap: "1rem" }}>
             <div className="sec-head" style={{ marginBottom: 0 }}>
               <div className="sec-eyebrow">Танымал тауарлар</div>
               <h2 className="sec-title">Бүгін не жейміз?</h2>
@@ -191,12 +191,8 @@ export default function HomePage() {
       {/* ═══ CTA ═══ */}
       <section className="sec">
         <div className="container">
-          <div style={{
-            display: "grid", gridTemplateColumns: "1fr 380px", gap: "3rem", alignItems: "center",
-            background: "var(--bg-card)", border: "1px solid var(--border-hi)",
-            borderRadius: "var(--r-xl)", padding: "3.5rem", position: "relative", overflow: "hidden",
-          }}>
-            <div style={{ position: "absolute", top: -120, left: -80, width: 400, height: 400, borderRadius: "50%", background: "radial-gradient(circle, rgba(255,190,0,0.05), transparent 65%)", pointerEvents: "none" }} />
+          <div className="cta-grid">
+            <div className="cta-grid__bg" />
             <div>
               <div className="pill pill-live" style={{ marginBottom: "1.5rem" }}>Белсенді ұсыныс</div>
               <h2 style={{ fontFamily: "var(--font-d)", fontSize: "clamp(1.8rem, 3vw, 2.8rem)", fontWeight: 800, letterSpacing: "-0.03em", color: "var(--txt)", marginBottom: "1rem" }}>
@@ -209,12 +205,12 @@ export default function HomePage() {
                 Тіркелу — тегін <ArrowRight size={16} />
               </Link>
             </div>
-            <div style={{ borderRadius: "var(--r-xl)", overflow: "hidden", border: "1px solid var(--border)" }}>
+            <div className="cta-img-wrap" style={{ borderRadius: "var(--r-xl)", overflow: "hidden", border: "1px solid var(--border)" }}>
               <Image
                 src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&q=80&auto=format&fit=crop&v=2"
                 alt="Тамақ"
                 width={380} height={280}
-                style={{ display: "block", width: "100%", height: 260, objectFit: "cover" }}
+                style={{ display: "block", width: "100%", height: "100%", objectFit: "cover" }}
               />
             </div>
           </div>

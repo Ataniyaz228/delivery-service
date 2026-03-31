@@ -70,10 +70,10 @@ export default function Navbar() {
               )}
             </div>
           ) : (
-            <>
+            <div className="topbar__auth" style={{ display: "flex", gap: "0.5rem" }}>
               <Link href="/auth/login" className="btn btn-ghost btn-sm">Кіру</Link>
               <Link href="/auth/register" className="btn btn-brand btn-sm">Тіркелу</Link>
-            </>
+            </div>
           )}
           <button className="topbar__ham" onClick={() => setMob(o => !o)} aria-label="Мәзір">
             {mob ? <X size={20} /> : <Menu size={20} />}

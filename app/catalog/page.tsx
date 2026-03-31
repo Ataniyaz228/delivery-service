@@ -144,9 +144,9 @@ function CatalogContent() {
           </div>
 
           {/* Content: sidebar + grid */}
-          <div style={{ display: "grid", gridTemplateColumns: "240px 1fr", gap: "2rem", alignItems: "start" }}>
+          <div className="catalog-layout" style={{ display: "grid", gridTemplateColumns: "240px 1fr", gap: "2rem", alignItems: "start" }}>
             {/* SIDEBAR */}
-            <div className="no-scrollbar" style={{
+            <div className="catalog-sidebar no-scrollbar" style={{
               background: "var(--bg-card)", border: "1px solid var(--border)",
               borderRadius: "var(--r-lg)", padding: "1.5rem", position: "sticky", top: "80px",
               maxHeight: "calc(100vh - 100px)", overflowY: "auto",
@@ -206,7 +206,7 @@ function CatalogContent() {
               {/* Categories */}
               <div>
                 <div style={{ fontSize: "0.74rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--txt-3)", marginBottom: "0.75rem" }}>Санаттар</div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                <div className="cat-list" style={{ gap: "2px" }}>
                   <button
                     className={catId === "" ? "cat-pill on" : "cat-pill"}
                     style={{ justifyContent: "flex-start", borderRadius: "var(--r-sm)", border: "none", background: catId === "" ? "var(--brand-dim)" : "none", width: "100%", textAlign: "left" }}

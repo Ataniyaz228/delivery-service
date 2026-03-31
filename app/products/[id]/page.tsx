@@ -114,7 +114,7 @@ export default function ProductPage({ params: pp }: { params: Promise<{ id: stri
 
       <section className="sec" style={{ paddingTop: "3rem" }}>
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 380px", gap: "3rem", alignItems: "start" }}>
+          <div className="pd-layout">
             {/* LEFT: info */}
             <div>
               {product.categoryName && (
