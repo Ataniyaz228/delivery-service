@@ -109,7 +109,7 @@ export default function CheckoutPage() {
           ))}
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: "2rem", alignItems: "start" }}>
+        <div className="checkout-layout">
           {/* Main content */}
           <div style={{ background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--r-xl)", padding: "2rem" }}>
             {/* Step 0: Cart review */}

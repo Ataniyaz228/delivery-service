@@ -399,6 +399,9 @@ a { color: inherit; text-decoration: none; }
 .ocard__addr { font-size:0.83rem; color:var(--txt-2); display:flex; gap:6px; align-items:flex-start; }
 .ocard__total { font-family:var(--font-d); font-size:1.4rem; font-weight:800; color:var(--txt); margin-top:1.25rem; }
 
+/* ═══ CHECKOUT ═══ */
+.checkout-layout { display:grid; grid-template-columns:1fr 320px; gap:2rem; align-items:start; }
+
 /* ═══ ADMIN ═══ */
 .adm-grid { display:grid; grid-template-columns:360px 1fr; gap:1.5rem; }
 .adm-kpi { display:grid; grid-template-columns:repeat(4, 1fr); gap:1rem; }
@@ -481,6 +484,7 @@ a { color: inherit; text-decoration: none; }
   
   .pd { grid-template-columns: 1fr; }
   .pd-layout { grid-template-columns: 1fr; }
+  .checkout-layout { grid-template-columns: 1fr; }
   .adm-grid { grid-template-columns: 1fr; }
   .adm-kpi { grid-template-columns: 1fr 1fr; }
   .adm-cols { grid-template-columns: 1fr; }
