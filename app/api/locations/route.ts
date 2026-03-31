@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
       ];
       
       // Add distance and delivery info
-      const enriched = fallback.map(r => ({
+      const enriched = fallback.map((r: any) => ({
         ...r,
         distance: calculateDistance(lat, lon, r.lat, r.lon),
         deliveryTime: calculateDeliveryTime(calculateDistance(lat, lon, r.lat, r.lon)),
@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Enrich OSM data with distance and delivery info
-    const enriched = restaurants.map(r => ({
+    const enriched = restaurants.map((r: any) => ({
       ...r,
       distance: calculateDistance(lat, lon, r.lat, r.lon),
       deliveryTime: calculateDeliveryTime(calculateDistance(lat, lon, r.lat, r.lon)),
