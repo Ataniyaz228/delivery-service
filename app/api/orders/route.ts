@@ -54,44 +54,61 @@ export async function POST(req: NextRequest) {
     const { items, deliveryAddress, note } = parsed.data;
     const userId = parseInt((session.user as any).id);
 
-    // Тауарлардың бағасы мен санын тексеру
-    let totalPrice = 0;
-    const enrichedItems: { productId: number; quantity: number; unitPrice: number }[] = [];
+    // SQL ТРАНЗАКЦИЯ АРҚЫЛЫ БАРЛЫҚ ӘРЕКЕТТІ ОРЫНДАЙМЫЗ
+    const newOrderResult = await db.transaction(async (tx) => {
+      let totalPrice = 0;
+      const enrichedItems: { productId: number; quantity: number; unitPrice: number }[] = [];
 
-    for (const item of items) {
-      const [product] = await db.select().from(products).where(eq(products.id, item.productId));
-      if (!product) return NextResponse.json({ error: `Тауар #${item.productId} табылмады` }, { status: 400 });
-      if (product.stock < item.quantity) return NextResponse.json({ error: `"${product.nameKz}" жеткіліксіз` }, { status: 400 });
-      const unitPrice = parseFloat(String(product.price));
-      totalPrice += unitPrice * item.quantity;
-      enrichedItems.push({ productId: item.productId, quantity: item.quantity, unitPrice });
-    }
+      // 1. Складта жеткілікті ме тексеру
+      for (const item of items) {
+        const [product] = await tx.select().from(products).where(eq(products.id, item.productId));
+        if (!product || product.isActive === 0) {
+          throw new Error(`Тауар #${item.productId} табылмады немесе өшірілген`);
+        }
+        if (product.stock < item.quantity) {
+          throw new Error(`"${product.nameKz}" жеткіліксіз (қоймада: ${product.stock})`);
+        }
+        const unitPrice = parseFloat(String(product.price));
+        totalPrice += unitPrice * item.quantity;
+        enrichedItems.push({ productId: item.productId, quantity: item.quantity, unitPrice });
+      }
 
-    // Тапсырыс жасау
-    const [newOrder] = await db.insert(orders).values({
-      userId,
-      totalPrice: String(totalPrice),
-      deliveryAddress,
-      note: note || null,
-    }).returning();
+      // 2. Жаңа тапсырыс кестесіне енгізу
+      const [newOrder] = await tx.insert(orders).values({
+        userId,
+        totalPrice: String(totalPrice),
+        deliveryAddress,
+        note: note || null,
+      }).returning();
 
-    // Тапсырыс элементтерін жасау + stock азайту
-    for (const item of enrichedItems) {
-      await db.insert(orderItems).values({
-        orderId: newOrder.id,
-        productId: item.productId,
-        quantity: item.quantity,
-        unitPrice: String(item.unitPrice),
-      });
-      await db
-        .update(products)
-        .set({ stock: products.stock - item.quantity })
-        .where(eq(products.id, item.productId));
-    }
+      // 3. Order Items енгізу жане складты азайту
+      for (const item of enrichedItems) {
+        // Тапсырыс ішіндегі тауар 
+        await tx.insert(orderItems).values({
+          orderId: newOrder.id,
+          productId: item.productId,
+          quantity: item.quantity,
+          unitPrice: String(item.unitPrice),
+        });
 
-    return NextResponse.json(newOrder, { status: 201 });
-  } catch (error) {
+        // Складтан азайту
+        // TODO: Идеально `set({ stock: sql\`stock - ${item.quantity}\` })`, бірақ транзакцияда оқып болдық вже
+        // tx.select-пен оқыған мәнге сүйенуге болады
+        const [currentProduct] = await tx.select().from(products).where(eq(products.id, item.productId));
+        await tx
+          .update(products)
+          .set({ stock: currentProduct.stock - item.quantity })
+          .where(eq(products.id, item.productId));
+      }
+
+      return newOrder;
+    });
+
+    return NextResponse.json(newOrderResult, { status: 201 });
+  } catch (error: any) {
     console.error("[POST /api/orders]", error);
-    return NextResponse.json({ error: "Тапсырыс беру мүмкін болмады" }, { status: 500 });
+    // Егер біз throw new Error('...') жасаған болсақ, сол текстті қайтарамыз
+    const msg = error instanceof Error ? error.message : "Тапсырыс беру мүмкін болмады";
+    return NextResponse.json({ error: msg }, { status: 400 });
   }
 }

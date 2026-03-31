@@ -41,6 +41,7 @@ export async function POST(req: NextRequest) {
 
 /**
  * DELETE /api/admin/products?id=X — тауарды жою (тек admin)
+ * Ескерту: Тапсырыстар тарихын бұзбау үшін "Soft Delete" (isActive = 0) қолданамыз.
  */
 export async function DELETE(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -49,7 +50,10 @@ export async function DELETE(req: NextRequest) {
   try {
     const id = parseInt(new URL(req.url).searchParams.get("id") || "");
     if (isNaN(id)) return NextResponse.json({ error: "Жарамсыз ID" }, { status: 400 });
-    await db.delete(products).where(eq(products.id, id));
+    
+    // Soft Delete: isActive = 0
+    await db.update(products).set({ isActive: 0 }).where(eq(products.id, id));
+    
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("[DELETE /api/admin/products]", error);
