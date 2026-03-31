@@ -1,13 +1,10 @@
-import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
+import { neon } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-http";
 import { users, categories, products } from "./schema";
 import bcrypt from "bcryptjs";
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-});
-const db = drizzle(pool);
+const sql = neon(process.env.DATABASE_URL!);
+const db = drizzle(sql);
 
 const CATEGORIES = [
   { nameKz: "Тамақ", icon: "🍔", color: "#FF6B35" },

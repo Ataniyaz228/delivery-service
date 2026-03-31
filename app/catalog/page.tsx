@@ -3,17 +3,19 @@ import { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { Search, SlidersHorizontal, ChevronLeft, ChevronRight, Package, Utensils, Pizza, Cookie, Coffee, Apple, Milk, ShoppingCart, Clock, Plus, ChevronDown, X, SlidersVertical, ArrowDownUp } from "lucide-react";
+import { Search, Package, Utensils, Pizza, Cookie, Coffee, Apple, Milk, ShoppingCart, Clock, Plus, ChevronLeft, ChevronRight, X, SlidersVertical, ArrowDownUp } from "lucide-react";
 import { useCart } from "@/lib/cart-context";
 import { useToast } from "@/lib/toast-context";
-import { getProductsByCategory, searchProducts, ASTANA_MENU_DATA } from "@/lib/real-data";
 
 const CAT_ICO: Record<string, any> = {
-  "pizza": <Pizza size={13} />,
-  "burgers": <Utensils size={13} />,
-  "sushi": <Utensils size={13} />,
-  "kazakh": <Cookie size={13} />,
-  "coffee": <Coffee size={13} />,
+  "Пицца": <Pizza size={13} />,
+  "Тамақ": <Utensils size={13} />,
+  "Тұшпара": <Cookie size={13} />,
+  "Тәттілер": <Cookie size={13} />,
+  "Сусындар": <Coffee size={13} />,
+  "Жемістер": <Apple size={13} />,
+  "Сүт өнімдері": <Milk size={13} />,
+  "Бакалея": <ShoppingCart size={13} />,
 };
 
 const SORT_OPTIONS = [
@@ -34,49 +36,72 @@ function CatalogContent() {
   const [products, setProducts] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [cats, setCats] = useState<any[]>(ASTANA_MENU_DATA.categories);
+  const [cats, setCats] = useState<any[]>([]);
   const [sort, setSort] = useState("default");
   const [priceMax, setPriceMax] = useState(10000);
   const [inStockOnly, setInStockOnly] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const limit = 12;
 
-  // Load products from local real data
+  // Загрузка категорий из БД
   useEffect(() => {
+    fetch("/api/categories")
+      .then(r => r.json())
+      .then(data => setCats(Array.isArray(data) ? data : []))
+      .catch(() => setCats([]));
+  }, []);
+
+  // Загрузка товаров из БД
+  const loadProducts = useCallback(async () => {
     setLoading(true);
-    let prods = getProductsByCategory(catId || undefined);
-    
-    // Search filter
-    if (q) {
-      prods = searchProducts(q);
+    try {
+      const params = new URLSearchParams();
+      if (q) params.set("q", q);
+      if (catId) params.set("category", catId);
+      params.set("page", String(page));
+      params.set("limit", String(limit));
+
+      const res = await fetch(`/api/products?${params}`);
+      const data = await res.json();
+
+      let prods = data.products || [];
+
+      // Фильтр по наличию
+      if (inStockOnly) prods = prods.filter((p: any) => p.stock > 0);
+
+      // Фильтр по цене
+      if (priceMax < 10000) prods = prods.filter((p: any) => Number(p.price) <= priceMax);
+
+      // Сортировка на клиенте (API уже вернул нужные данные)
+      if (sort === "price_asc") prods.sort((a: any, b: any) => Number(a.price) - Number(b.price));
+      if (sort === "price_desc") prods.sort((a: any, b: any) => Number(b.price) - Number(a.price));
+      if (sort === "name_asc") prods.sort((a: any, b: any) => a.nameKz.localeCompare(b.nameKz));
+
+      setProducts(prods);
+      setTotal(data.total ?? prods.length);
+    } catch {
+      setProducts([]);
+      setTotal(0);
+    } finally {
+      setLoading(false);
     }
-    
-    // Stock filter (simulate - all items in stock for demo)
-    if (inStockOnly) {
-      prods = prods.filter((p: any) => p.popular || true);
-    }
-    
-    // Price filter
-    if (priceMax < 10000) {
-      prods = prods.filter((p: any) => p.price <= priceMax);
-    }
-    
-    // Sort
-    if (sort === "price_asc") prods.sort((a: any, b: any) => a.price - b.price);
-    if (sort === "price_desc") prods.sort((a: any, b: any) => b.price - a.price);
-    if (sort === "name_asc") prods.sort((a: any, b: any) => a.name.localeCompare(b.name));
-    
-    setProducts(prods);
-    setTotal(prods.length);
-    setLoading(false);
   }, [q, catId, page, sort, priceMax, inStockOnly]);
+
+  useEffect(() => {
+    loadProducts();
+  }, [loadProducts]);
 
   const pages = Math.ceil(total / limit);
 
   const handleAddToCart = (e: React.MouseEvent, prod: any) => {
     e.preventDefault();
-    add({ id: prod.id, nameKz: prod.name, price: prod.price, imageUrl: prod.image, categoryName: prod.category });
-    toast(`"${prod.name}" себетке қосылды`, "success");
+    add({
+      id: prod.id,
+      nameKz: prod.nameKz,
+      price: Number(prod.price),
+      imageUrl: prod.imageUrl,
+      categoryName: prod.categoryName,
+    });
+    toast(`"${prod.nameKz}" себетке қосылды`, "success");
   };
 
   const activeFilters = (catId ? 1 : 0) + (inStockOnly ? 1 : 0) + (priceMax < 10000 ? 1 : 0);
@@ -113,32 +138,18 @@ function CatalogContent() {
               <ArrowDownUp size={13} style={{ position: "absolute", right: 11, top: "50%", transform: "translateY(-50%)", color: "var(--txt-3)", pointerEvents: "none" }} />
             </div>
 
-            {/* Filter toggle (mobile) */}
-            <button
-              className="btn btn-ghost btn-sm"
-              onClick={() => setSidebarOpen(o => !o)}
-              style={{ display: "flex", alignItems: "center", gap: 6 }}
-            >
-              <SlidersVertical size={14} />
-              Сүзгі
-              {activeFilters > 0 && (
-                <span style={{ background: "var(--brand)", color: "#000", borderRadius: "99px", padding: "1px 7px", fontSize: "0.68rem", fontWeight: 800 }}>
-                  {activeFilters}
-                </span>
-              )}
-            </button>
-
             <div style={{ fontSize: "0.79rem", color: "var(--txt-2)", marginLeft: "auto" }}>
-              {loading ? "Іздеу..." : `${total} нәтиже`}
+              {loading ? "Жүктелуде..." : `${total} нәтиже`}
             </div>
           </div>
 
           {/* Content: sidebar + grid */}
           <div style={{ display: "grid", gridTemplateColumns: "240px 1fr", gap: "2rem", alignItems: "start" }}>
             {/* SIDEBAR */}
-            <div style={{
+            <div className="no-scrollbar" style={{
               background: "var(--bg-card)", border: "1px solid var(--border)",
               borderRadius: "var(--r-lg)", padding: "1.5rem", position: "sticky", top: "80px",
+              maxHeight: "calc(100vh - 100px)", overflowY: "auto",
             }}>
               <div style={{ fontFamily: "var(--font-d)", fontWeight: 700, fontSize: "0.9rem", color: "var(--txt)", marginBottom: "1.5rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 Сүзгілер
@@ -207,10 +218,13 @@ function CatalogContent() {
                     <button
                       key={c.id}
                       className={catId === String(c.id) ? "cat-pill on" : "cat-pill"}
-                      style={{ justifyContent: "flex-start", borderRadius: "var(--r-sm)", border: "none", background: catId === String(c.id) ? "var(--brand-dim)" : "none", width: "100%", textAlign: "left", color: catId === String(c.id) ? "var(--brand)" : "var(--txt-2)" }}
+                      style={{
+                        padding: "10px 14px", border: "none", background: catId === String(c.id) ? "rgba(255,190,0,0.15)" : "transparent",
+                        color: catId === String(c.id) ? "var(--brand)" : "var(--txt-2)", justifyContent: "flex-start", fontSize: "0.9rem", width: "100%", borderRadius: "var(--r-sm)"
+                      }}
                       onClick={() => { setCatId(String(c.id)); setPage(1); }}
                     >
-                      {CAT_ICO[c.id] || <Package size={13} />} {c.name}
+                      {CAT_ICO[c.nameKz] || <Package size={13} />} {c.nameKz}
                     </button>
                   ))}
                 </div>
@@ -243,20 +257,28 @@ function CatalogContent() {
                   {products.map((prod: any) => (
                     <Link href={`/products/${prod.id}`} key={prod.id} className="food-card">
                       <div className="food-card__img-wrap">
-                        {prod.image
-                          ? <Image src={prod.image} alt={prod.name} width={400} height={300} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                        {prod.imageUrl
+                          ? <Image
+                              src={prod.imageUrl}
+                              alt={prod.nameKz}
+                              width={400} height={300}
+                              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                              onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
+                            />
                           : <div className="food-card__ph"><Package size={42} /></div>
                         }
-                        <div className="food-card__time"><Clock size={10} /> {prod.prepTime} мин</div>
+                        <div className="food-card__time"><Clock size={10} /> 20 мин</div>
                       </div>
                       <div className="food-card__body">
-                        <div className="food-card__cat">{CAT_ICO[prod.category] || <Package size={10} />} {ASTANA_MENU_DATA.categories.find(c => c.id === prod.category)?.name || "Тауар"}</div>
-                        <div className="food-card__name">{prod.name}</div>
-                        {prod.description && (
-                          <div className="food-card__desc">{prod.description.slice(0, 75)}{prod.description.length > 75 ? "…" : ""}</div>
+                        <div className="food-card__cat">
+                          {CAT_ICO[prod.categoryName] || <Package size={10} />} {prod.categoryName || "Тауар"}
+                        </div>
+                        <div className="food-card__name">{prod.nameKz}</div>
+                        {prod.descriptionKz && (
+                          <div className="food-card__desc">{prod.descriptionKz.slice(0, 75)}{prod.descriptionKz.length > 75 ? "…" : ""}</div>
                         )}
                         <div className="food-card__foot">
-                          <div className="food-card__price">{prod.price.toLocaleString()} <sup>₸</sup></div>
+                          <div className="food-card__price">{Number(prod.price).toLocaleString()} <sup>₸</sup></div>
                           <button className="food-card__add" onClick={e => handleAddToCart(e, prod)}>
                             <Plus size={16} />
                           </button>

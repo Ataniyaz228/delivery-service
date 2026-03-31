@@ -43,6 +43,14 @@
   --t: all 0.22s var(--ease-out);
 }
 
+.no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
 html { scroll-behavior: smooth; }
 body {
   font-family: var(--font); font-size: 15px; line-height: 1.6;

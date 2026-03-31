@@ -11,10 +11,10 @@ const FEATURES = [
 ];
 
 const SHOWCASE = [
-  { name: "Пепперони пицца", cat: "Dodo Pizza", price: "2 890", time: "25 мин", img: "https://images.dodopizza.ru/v2/288/pepperoni.jpg" },
-  { name: "Воппер", cat: "Burger King", price: "1 890", time: "15 мин", img: "https://bkastana.kz/images/whopper.jpg" },
-  { name: "Филадельфия", cat: "Sushi Master", price: "2 490", time: "20 мин", img: "https://sushimaster.kz/images/philadelphia.jpg" },
-  { name: "Баурсаки", cat: "Казахская кухня", price: "890", time: "15 мин", img: "https://astanatasty.kz/images/baursaki.jpg" },
+  { name: "Пепперони пицца", cat: "Dodo Pizza", price: "2 890", time: "25 мин", img: "https://images.unsplash.com/photo-1628840042765-356cda07504e?w=800&auto=format&fit=crop&q=80" },
+  { name: "Воппер", cat: "Burger King", price: "1 890", time: "15 мин", img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&auto=format&fit=crop&q=80" },
+  { name: "Филадельфия", cat: "Sushi Master", price: "2 490", time: "20 мин", img: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=800&auto=format&fit=crop&q=80" },
+  { name: "Баурсаки", cat: "Казахская кухня", price: "890", time: "15 мин", img: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=800&auto=format&fit=crop&q=80" },
 ];
 
 export default function HomePage() {
@@ -70,7 +70,7 @@ export default function HomePage() {
         {/* Right side food image */}
         <div className="hero__right">
           <Image
-            src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1000&q=80&auto=format&fit=crop"
+            src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1000&q=80&auto=format&fit=crop&v=2"
             alt="Тамақ"
             fill
             style={{ objectFit: "cover", objectPosition: "center" }}
@@ -211,7 +211,7 @@ export default function HomePage() {
             </div>
             <div style={{ borderRadius: "var(--r-xl)", overflow: "hidden", border: "1px solid var(--border)" }}>
               <Image
-                src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&q=80&auto=format&fit=crop"
+                src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&q=80&auto=format&fit=crop&v=2"
                 alt="Тамақ"
                 width={380} height={280}
                 style={{ display: "block", width: "100%", height: 260, objectFit: "cover" }}

@@ -84,7 +84,14 @@ export default function ProductPage({ params: pp }: { params: Promise<{ id: stri
       {/* Fullwidth hero image */}
       <div style={{ position: "relative", height: "45vh", minHeight: 280, background: "var(--bg-raised)", overflow: "hidden" }}>
         {product.imageUrl
-          ? <Image src={product.imageUrl} alt={product.nameKz} fill style={{ objectFit: "cover", objectPosition: "center" }} priority />
+          ? <Image
+              src={product.imageUrl}
+              alt={product.nameKz}
+              fill
+              style={{ objectFit: "cover", objectPosition: "center" }}
+              priority
+              onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
+            />
           : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", color: "var(--txt-3)" }}><Package size={80} /></div>
         }
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%)" }} />
@@ -148,7 +155,13 @@ export default function ProductPage({ params: pp }: { params: Promise<{ id: stri
                     {related.map((r: any) => (
                       <Link href={`/products/${r.id}`} key={r.id} style={{ flexShrink: 0, width: 180, background: "var(--bg-card)", border: "1px solid var(--border)", borderRadius: "var(--r)", overflow: "hidden", transition: "border-color 0.2s" }}>
                         {r.imageUrl
-                          ? <Image src={r.imageUrl} alt={r.nameKz} width={180} height={120} style={{ display: "block", width: "100%", height: 110, objectFit: "cover" }} />
+                          ? <Image
+                              src={r.imageUrl}
+                              alt={r.nameKz}
+                              width={180} height={120}
+                              style={{ display: "block", width: "100%", height: 110, objectFit: "cover" }}
+                              onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
+                            />
                           : <div style={{ height: 110, background: "var(--bg-raised)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--txt-3)" }}><Package size={28} /></div>
                         }
                         <div style={{ padding: "0.75rem" }}>
