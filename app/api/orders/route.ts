@@ -55,54 +55,52 @@ export async function POST(req: NextRequest) {
     const userId = parseInt((session.user as any).id);
 
     // SQL ТРАНЗАКЦИЯ АРҚЫЛЫ БАРЛЫҚ ӘРЕКЕТТІ ОРЫНДАЙМЫЗ
-    const newOrderResult = await db.transaction(async (tx) => {
-      let totalPrice = 0;
-      const enrichedItems: { productId: number; quantity: number; unitPrice: number }[] = [];
+    // Убрали db.transaction(), так как neon-http не поддерживает интерактивные транзакции. 
+    // Выполняем запросы последовательно.
+    let totalPrice = 0;
+    const enrichedItems: { productId: number; quantity: number; unitPrice: number }[] = [];
 
-      // 1. Складта жеткілікті ме тексеру
-      for (const item of items) {
-        const [product] = await tx.select().from(products).where(eq(products.id, item.productId));
-        if (!product || product.isActive === 0) {
-          throw new Error(`Тауар #${item.productId} табылмады немесе өшірілген`);
-        }
-        if (product.stock < item.quantity) {
-          throw new Error(`"${product.nameKz}" жеткіліксіз (қоймада: ${product.stock})`);
-        }
-        const unitPrice = parseFloat(String(product.price));
-        totalPrice += unitPrice * item.quantity;
-        enrichedItems.push({ productId: item.productId, quantity: item.quantity, unitPrice });
+    // 1. Складта жеткілікті ме тексеру
+    for (const item of items) {
+      const [product] = await db.select().from(products).where(eq(products.id, item.productId));
+      if (!product || product.isActive === 0) {
+        throw new Error(`Тауар #${item.productId} табылмады немесе өшірілген`);
       }
-
-      // 2. Жаңа тапсырыс кестесіне енгізу
-      const [newOrder] = await tx.insert(orders).values({
-        userId,
-        totalPrice: String(totalPrice),
-        deliveryAddress,
-        note: note || null,
-      }).returning();
-
-      // 3. Order Items енгізу жане складты азайту
-      for (const item of enrichedItems) {
-        // Тапсырыс ішіндегі тауар 
-        await tx.insert(orderItems).values({
-          orderId: newOrder.id,
-          productId: item.productId,
-          quantity: item.quantity,
-          unitPrice: String(item.unitPrice),
-        });
-
-        // Складтан азайту
-        // TODO: Идеально `set({ stock: sql\`stock - ${item.quantity}\` })`, бірақ транзакцияда оқып болдық вже
-        // tx.select-пен оқыған мәнге сүйенуге болады
-        const [currentProduct] = await tx.select().from(products).where(eq(products.id, item.productId));
-        await tx
-          .update(products)
-          .set({ stock: currentProduct.stock - item.quantity })
-          .where(eq(products.id, item.productId));
+      if (product.stock < item.quantity) {
+        throw new Error(`"${product.nameKz}" жеткіліксіз (қоймада: ${product.stock})`);
       }
+      const unitPrice = parseFloat(String(product.price));
+      totalPrice += unitPrice * item.quantity;
+      enrichedItems.push({ productId: item.productId, quantity: item.quantity, unitPrice });
+    }
 
-      return newOrder;
-    });
+    // 2. Жаңа тапсырыс кестесіне енгізу
+    const [newOrder] = await db.insert(orders).values({
+      userId,
+      totalPrice: String(totalPrice),
+      deliveryAddress,
+      note: note || null,
+    }).returning();
+
+    // 3. Order Items енгізу жане складты азайту
+    for (const item of enrichedItems) {
+      // Тапсырыс ішіндегі тауар 
+      await db.insert(orderItems).values({
+        orderId: newOrder.id,
+        productId: item.productId,
+        quantity: item.quantity,
+        unitPrice: String(item.unitPrice),
+      });
+
+      // Складтан азайту
+      const [currentProduct] = await db.select().from(products).where(eq(products.id, item.productId));
+      await db
+        .update(products)
+        .set({ stock: currentProduct.stock - item.quantity })
+        .where(eq(products.id, item.productId));
+    }
+
+    const newOrderResult = newOrder;
 
     return NextResponse.json(newOrderResult, { status: 201 });
   } catch (error: any) {
